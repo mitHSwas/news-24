@@ -18,10 +18,11 @@ const displayCategory = categories => {
                 <button type="button" onclick="loadCategoryNews('${category.category_id}')" class="btn btn-light px-4 mx-3 my-3">${category.category_name}</button>
             `;
         categoryUl.appendChild(categoryLi)
-    })
+    });
+    loadCategoryNews("01")
 }
 
-const loadCategoryNews = newsId => {
+const loadCategoryNews = (newsId) => {
     const url = `https://openapi.programming-hero.com/api/news/category/${newsId}`;
     fetch(url)
         .then(res => res.json())
@@ -32,7 +33,7 @@ const displayCategoryNews = categoryNews => {
     const newsContainer = document.getElementById("news-container");
     newsContainer.textContent = ``;
     categoryNews.forEach(news => {
-        console.log(news)
+        // console.log(news)
         const newsDiv = document.createElement("div");
         newsDiv.classList.add("card", "mb-3");
         newsDiv.innerHTML = `
@@ -44,15 +45,28 @@ const displayCategoryNews = categoryNews => {
                     <div class="card-body">
                         <h5 class="card-title">${news.title}</h5>
                         <p class="card-text">${news.details.slice(0, 250)}....</p>
-                        <div class="d-flex">
-                            <div class="d-flex ">
-                                <img class="author-img" src="${news.author.img}">
-                                <div>
-                                    <h6>${news.author.name}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex w-25">
+                                <img class="m-2 mt-4 img-fluid author-img" src="${news.author.img}">
+                                <div class="mt-3">
+                                    <span>${news.author.name}</span>
                                     <p>${news.author.published_date}</p>
                                 </div>
                             </div>
-                            <p><p>
+                            <div class="d-flex align-items-center">
+                                <i class="mx-2 fa-solid fa-eye"></i>
+                                <p class="mt-3">${news.total_view}</p>
+                            </div>
+                            <div class="d-flex">
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                            <div>
+                                <p id="news-details" onclick="displayNewsDetails('${news._id}')" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="mt-3"><i class="fa-solid fa-arrow-right"></i></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,6 +74,37 @@ const displayCategoryNews = categoryNews => {
         `
         newsContainer.appendChild(newsDiv)
     })
+}
+
+const displayNewsDetails = async newsDetailsId => {
+    const url = `https://openapi.programming-hero.com/api/news/${newsDetailsId}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const { title, details, thumbnail_url, } = data.data[0];
+    console.log(data.data[0])
+    const modalContainer = document.getElementById("modal-container");
+    modalContainer.innerHTML = `
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">${title}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="mx-auto mt-2">
+                        <img src="${thumbnail_url}">
+                    </div>
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <p class="p-3">${details}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
 }
 
 loadCategory()

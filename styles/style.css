@@ -3,6 +3,16 @@
 }
 
 .author-img {
-    width: 7%;
+    width: 30%;
+    height: 55px;
     border-radius: 50%;
+}
+
+#news-details {
+    cursor: pointer;
+    padding: 10px;
+}
+
+#news-details:hover {
+    color: blue;
 }
