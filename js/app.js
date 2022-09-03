@@ -80,8 +80,7 @@ const displayNewsDetails = async newsDetailsId => {
     const url = `https://openapi.programming-hero.com/api/news/${newsDetailsId}`;
     const res = await fetch(url);
     const data = await res.json();
-    const { title, details, thumbnail_url, } = data.data[0];
-    console.log(data.data[0])
+    const { title, details, thumbnail_url, author, total_view } = data.data[0];
     const modalContainer = document.getElementById("modal-container");
     modalContainer.innerHTML = `
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -98,6 +97,26 @@ const displayNewsDetails = async newsDetailsId => {
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <p class="p-3">${details}</p>
                     </div>
+                    <div class="d-flex justify-content-between align-items-center p-3">
+                            <div class="d-flex w-50">
+                                <img class="m-2 mt-4 img-fluid rounded-circle w-25" src="${author.img}">
+                                <div class="mt-4">
+                                    <span>${author.name}</span>
+                                    <p>${author.published_date}</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="mx-2 fa-solid fa-eye"></i>
+                                <p class="mt-3">${total_view}</p>
+                            </div>
+                            <div class="d-flex">
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                        </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
