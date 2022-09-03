@@ -1,3 +1,8 @@
 #category-lists {
     list-style-type: none;
 }
+
+.author-img {
+    width: 7%;
+    border-radius: 50%;
+}
