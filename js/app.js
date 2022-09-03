@@ -15,22 +15,25 @@ const displayCategory = categories => {
     categories.forEach(category => {
         const categoryLi = document.createElement("li");
         categoryLi.innerHTML = `
-                <button type="button" onclick="loadCategoryNews('${category.category_id}')" class="btn btn-light px-4 mx-3 my-3">${category.category_name}</button>
+                <button type="button" onclick="loadCategoryNews('${category.category_id}', '${category.category_name}')" class="btn btn-light px-4 mx-3 my-3">${category.category_name}</button>
             `;
+        toggleSpinner(true)
         categoryUl.appendChild(categoryLi)
     });
-    loadCategoryNews("01")
+    loadCategoryNews("01", "Breaking News")
 }
 
-const loadCategoryNews = (newsId) => {
+const loadCategoryNews = (newsId, category) => {
     const url = `https://openapi.programming-hero.com/api/news/category/${newsId}`;
     fetch(url)
         .then(res => res.json())
-        .then(data => displayCategoryNews(data.data))
+        .then(data => displayCategoryNews(data.data, category))
 }
 
-const displayCategoryNews = categoryNews => {
+const displayCategoryNews = (categoryNews, category) => {
     const newsContainer = document.getElementById("news-container");
+    const categoryItem = document.getElementById("category-item");
+    categoryItem.value = categoryNews.length + " Items found by " + category;
     newsContainer.textContent = ``;
     categoryNews.forEach(news => {
         // console.log(news)
@@ -49,7 +52,7 @@ const displayCategoryNews = categoryNews => {
                             <div class="d-flex w-25">
                                 <img class="m-2 mt-4 img-fluid author-img" src="${news.author.img}">
                                 <div class="mt-3">
-                                    <span>${news.author.name}</span>
+                                    <span>${news.author.name ? news.author.name : "No data found"}</span>
                                     <p>${news.author.published_date}</p>
                                 </div>
                             </div>
@@ -71,7 +74,8 @@ const displayCategoryNews = categoryNews => {
                     </div>
                 </div>
             </div>
-        `
+        `;
+        toggleSpinner(false)
         newsContainer.appendChild(newsDiv)
     })
 }
@@ -124,6 +128,16 @@ const displayNewsDetails = async newsDetailsId => {
             </div>
         </div>
     `
+}
+
+const toggleSpinner = isLoading => {
+    const loaderSection = document.getElementById("loader");
+    if (isLoading) {
+        loaderSection.classList.remove("d-none")
+    }
+    else {
+        loaderSection.classList.add("d-none")
+    }
 }
 
 loadCategory()

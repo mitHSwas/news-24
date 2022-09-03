@@ -16,3 +16,7 @@
 #news-details:hover {
     color: blue;
 }
+
+#loader-div {
+    height: 400px;
+}
